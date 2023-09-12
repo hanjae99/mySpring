@@ -1,6 +1,7 @@
 package com.keduit.persistence;
 
 import com.keduit.mapper.TimeMapper;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,7 +14,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 @Log4j
 public class TimeMapperTests {
 
-    @Autowired
+    @Setter(onMethod_ = {@Autowired})
     private TimeMapper timeMapper;
 
     @Test
