@@ -21,9 +21,6 @@ import static org.junit.Assert.fail;
 public class DataSourceTests {
 
     @Setter(onMethod_ = {@Autowired})
-    private DataSource dataSource;
-
-    @Setter(onMethod_ = {@Autowired})
     private SqlSessionFactory sqlSessionFactory;
 
     @Test
