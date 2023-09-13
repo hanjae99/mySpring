@@ -38,8 +38,8 @@
                                 <label>내용</label>
                                 <textarea class="form-control" name="content" rows="5"></textarea>
                             </div>
-                            <button type="submit" class="btn btn-default">등록</button>
-                            <button type="reset" class="btn btn-default">취소</button>
+                            <button type="submit" class="btn btn-default btn-success">등록</button>
+                            <button type="reset" class="btn btn-default btn-danger">취소</button>
                         </form>
                     </div>
                     <!-- /.col-lg-6 (nested) -->

@@ -1,6 +1,7 @@
 package com.keduit.service;
 
 import com.keduit.domain.BoardVO;
+import com.keduit.domain.Criteria;
 import com.keduit.mapper.BoardMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.ToString;
@@ -52,9 +53,10 @@ public class BoardServiceImpl implements BoardService{
     }
 
     @Override
-    public List<BoardVO> getList() {
+    public List<BoardVO> getList(Criteria cri) {
+
         log.info("...getList...");
-        List<BoardVO> list = boardMapper.getList();
+        List<BoardVO> list = boardMapper.getListWithPaging(cri);
         return list;
     }
 }

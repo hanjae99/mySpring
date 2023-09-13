@@ -1,16 +1,19 @@
 package com.keduit.controller;
 
 import com.keduit.domain.BoardVO;
+import com.keduit.domain.Criteria;
+import com.keduit.domain.PageDTO;
 import com.keduit.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
+import org.springframework.beans.propertyeditors.CustomDateEditor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.WebDataBinder;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+
+import java.text.SimpleDateFormat;
 
 @Controller
 @RequiredArgsConstructor
@@ -20,12 +23,27 @@ public class BoardController {
 
     private final BoardService service;
 
-    @GetMapping("/list")
-    public void list(Model model){
-        log.info("...list...");
-        model.addAttribute("list", service.getList());
+    // DateFormat 형식 지정
+    @InitBinder
+    public void initBinder(WebDataBinder binder) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        binder.registerCustomEditor(java.util.Date.class,
+                new CustomDateEditor(dateFormat, false));
     }
 
+//    @GetMapping("/list")
+//    public void list(Model model){
+//        log.info("...list...");
+//        model.addAttribute("list", service.getList());
+//    }
+    @GetMapping("/list")
+    public void list(Criteria cri, Model model){
+        log.info("...list...");
+        model.addAttribute("list", service.getList(cri));
+        model.addAttribute("pageMaker", new PageDTO(cri, 123));
+    }
+
+//    처음 등록 화면으로 이동
     @GetMapping("/register")
     public void register(){
 
@@ -41,9 +59,9 @@ public class BoardController {
         return "redirect:/board/list";
     }
 
-    @GetMapping("/get")
+    @GetMapping({"/get", "/modify"})
     public void get(@RequestParam("bno") Long bno, Model model){
-        log.info("...get...");
+        log.info("...get or modify...");
         model.addAttribute("board", service.get(bno));
     }
 

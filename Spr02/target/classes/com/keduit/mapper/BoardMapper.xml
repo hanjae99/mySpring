@@ -4,7 +4,25 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.keduit.mapper.BoardMapper">
     <select id="getList" resultType="com.keduit.domain.BoardVO">
-        SELECT * FROM board WHERE bno > 0 ORDER BY bno DESC
+        SELECT *
+        FROM board
+        WHERE bno > 0
+        ORDER BY bno DESC
+    </select>
+    <select id="getListWithPaging" resultType="com.keduit.domain.BoardVO">
+        <![CDATA[
+        SELECT bno, title, content, regdate, updatedate
+        FROM (SELECT /*+ INDEX_DESC(board pk_board */
+                  ROWNUM rn,
+                  bno,
+                  title,
+                  content,
+                  regdate,
+                  updatedate
+              FROM board
+              WHERE ROWNUM <= #{pageNum} * #{amount})
+        WHERE rn > (#{pageNum} -1) * #{amount}
+        ]]>
     </select>
     <insert id="insert">
         INSERT INTO board (bno, title, content, writer)
@@ -20,17 +38,21 @@
         (#{bno}, #{title}, #{content}, #{writer})
     </insert>
     <select id="read" resultType="com.keduit.domain.BoardVO">
-        SELECT * FROM board WHERE bno = #{bno}
+        SELECT *
+        FROM board
+        WHERE bno = #{bno}
     </select>
     <delete id="delete">
-        delete from board where bno = #{bno}
+        DELETE
+        FROM board
+        WHERE bno = #{bno}
     </delete>
     <update id="update">
         UPDATE board
-        SET title   = #{title},
-            content = #{content},
-            writer  = #{writer},
+        SET title      = #{title},
+            content    = #{content},
+            writer     = #{writer},
             updatedate = sysdate
-            where bno = #{bno}
+        WHERE bno = #{bno}
     </update>
 </mapper>

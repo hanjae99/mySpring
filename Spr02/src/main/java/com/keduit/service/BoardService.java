@@ -1,6 +1,7 @@
 package com.keduit.service;
 
 import com.keduit.domain.BoardVO;
+import com.keduit.domain.Criteria;
 
 import java.util.List;
 
@@ -14,5 +15,5 @@ public interface BoardService {
 
     public boolean remove(Long bno);
 
-    public List<BoardVO> getList();
+    public List<BoardVO> getList(Criteria cri);
 }
