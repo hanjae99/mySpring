@@ -24,6 +24,24 @@
                 <button id="regBtn" type="button" class="btn btn-xs pull-right btn-primary">게시글 등록</button>
             </div>
             <!-- /.panel-heading -->
+
+            <%--            검색창--%>
+            <form class="form-inline" id="searchForm" action="/board/list" method="get">
+                <select name="type" class="form-control form-select-lg mb-3 " aria-label="Default select example">
+                    <option value="">==== 선택 ====</option>
+                    <option value="T" <c:out value="${pageMaker.cri.type eq 'T' ? 'selected' : ''} "/> >제목</option>
+                    <option value="C" <c:out value="${pageMaker.cri.type eq 'C' ? 'selected' : ''} "/>>내용</option>
+                    <option value="W" <c:out value="${pageMaker.cri.type eq 'W' ? 'selected' : ''} "/>>글쓴이</option>
+                    <option value="TC" <c:out value="${pageMaker.cri.type eq 'TC' ? 'selected' : ''} "/>>제목 or 내용</option>
+                    <option value="TW" <c:out value="${pageMaker.cri.type eq 'TW' ? 'selected' : ''} "/>>제목 or 글쓴이</option>
+                    <option value="TWC" <c:out value="${pageMaker.cri.type eq 'TWC' ? 'selected' : ''} "/>>제목 or 내용 or 글쓴이</option>
+                </select>
+                <input class="form-control mr-sm-2" type="search" name="keyword"
+                       placeholder="검색어를 입력하세요" aria-label="Search" value="${pageMaker.cri.keyword}">
+                <input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum}">
+                <input type="hidden" name="amount" value="${pageMaker.cri.amount}">
+                <button class="btn btn-outline-success my-2 my-sm-0">검색</button>
+            </form>
             <div class="panel-body">
                 <table width="100%" class="table table-striped table-bordered table-hover">
                     <thead>
@@ -39,7 +57,7 @@
                     <c:forEach items="${list}" var="board">
                         <tr>
                             <td><c:out value="${board.bno}"/></td>
-                            <td><a href="/board/get?bno=${board.bno}"><c:out value="${board.title}"/></a></td>
+                            <td><a class="move" href="${board.bno}"><c:out value="${board.title}"/></a></td>
                             <td><c:out value="${board.writer}"/></td>
                             <td><fmt:formatDate value="${board.regdate}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
                             <td><fmt:formatDate value="${board.updatedate}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
@@ -72,6 +90,8 @@
                 <form action="/board/list" id="actionForm" method="get">
                     <input type="hidden" name="pageNum" value="${pageMaker.cri.pageNum}">
                     <input type="hidden" name="amount" value="${pageMaker.cri.amount}">
+                    <input type="hidden" name="type" value="${pageMaker.cri.type}">
+                    <input type="hidden" name="keyword" value="${pageMaker.cri.keyword}">
                 </form>
 
                 <!-- Modal -->
@@ -111,7 +131,7 @@
         const result = "<c:out value='${result}'/>";
         checkModal(result);
 
-        <%--게시글 등록 중 뒤로가기 시 다시 등록할 수 있는 현상 방지--%>
+        <%--게시글 등록 후 뒤로가기 시 모달창이 다시 뜨는 현상 방지--%>
         console.log(history);
         history.replaceState({}, null, null);
 
@@ -131,11 +151,35 @@
         })
 
         const actionForm = $("#actionForm");
-        $(".paginate_button a").on("click", function (e){
+        $(".paginate_button a").on("click", function (e) {
             e.preventDefault();
 
             actionForm.find("input[name='pageNum']").val($(this).attr("href"));
+            actionForm.attr("action", "/board/list");
             actionForm.submit();
+        });
+        $(".move").on("click", function (e) {
+            e.preventDefault();
+
+            actionForm.find("input[name='bno']").remove();
+            actionForm.append("<input type='hidden' name='bno' value='" + $(this).attr("href") + "'>");
+            actionForm.attr("action", "/board/get");
+            actionForm.submit();
+        });
+
+        const searchForm = $("#searchForm");
+        $("#searchForm button").on("click", function (e) {
+            if (!searchForm.find("option:selected").val()) {
+                alert("검색 조건을 선택하세요");
+                return false;
+            }
+            if (!searchForm.find("input[name='keyword']").val()) {
+                alert("검색 키워드를 입력하세요");
+                return false;
+            }
+
+            searchForm.find("input[name='pageNum']").val("1");
+            searchForm.submit();
         })
     })
 </script>

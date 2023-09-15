@@ -86,5 +86,15 @@ public class BoardMapperTests {
             log.info("업데이트 실패!");
         }
     }
+
+    @Test
+    public void testSearch(){
+        Criteria cri = new Criteria();
+        cri.setKeyword("궁서");
+        cri.setType("TW");
+
+        List<BoardVO> list = boardMapper.getListWithPaging(cri);
+        list.forEach(board -> log.info(board));
+    }
 }
 

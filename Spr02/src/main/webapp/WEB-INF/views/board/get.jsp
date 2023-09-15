@@ -44,12 +44,18 @@
                             <label>내용</label>
                             <textarea class="form-control" name="content" rows="5" readonly>${board.content}</textarea>
                         </div>
-                        <button data-oper="modify" class="btn btn-default" onclick="location.href='/board/modify?bno=${board.bno}'">수정</button>
+                        <button data-oper="modify" class="btn btn-default">수정</button>
                         <button data-oper="remove"  class="btn btn-danger" onclick="location.href='/board/remove?bno=${board.bno}'">삭제</button>
-                        <button data-oper="list"  class="btn btn-info" onclick="location.href='/board/list'">목록</button>
+                        <button data-oper="list"  class="btn btn-info">목록</button>
                     </div>
                     <!-- /.col-lg-6 (nested) -->
-
+                    <form id="operForm" action="/board/modify" method="get">
+                        <input type="hidden" name="pageNum" value="${cri.pageNum}">
+                        <input type="hidden" name="amount" value="${cri.amount}">
+                        <input id="bno" type="hidden" name="bno" value="${board.bno}">
+                        <input type="hidden" name="type" value="${cri.type}">
+                        <input type="hidden" name="keyword" value="${cri.keyword}">
+                    </form>
                 </div>
                 <!-- /.row (nested) -->
             </div>
@@ -60,4 +66,23 @@
     <!-- /.col-lg-12 -->
 </div>
 <!-- /.row -->
+<script type="text/javascript">
+    $(document).ready(function (){
+        const operForm = $("#operForm");
+
+        $("button[data-oper='modify']").on("click", function (e){
+            operForm.submit();
+        });
+
+        $("button[data-oper='remove']").on("click", function (e){
+            operForm.attr("action", "/board/remove").submit();
+        })
+
+        $("button[data-oper='list']").on("click", function (e){
+            operForm.find("#bno").remove();
+            operForm.attr("action", "/board/list").submit();
+        })
+    })
+</script>
+
 <%@include file="../includes/footer.jsp" %>

@@ -40,7 +40,9 @@ public class BoardController {
     public void list(Criteria cri, Model model){
         log.info("...list...");
         model.addAttribute("list", service.getList(cri));
-        model.addAttribute("pageMaker", new PageDTO(cri, 123));
+
+        int total = service.getTotalCount(cri);
+        model.addAttribute("pageMaker", new PageDTO(cri, total));
     }
 
 //    처음 등록 화면으로 이동
@@ -60,13 +62,13 @@ public class BoardController {
     }
 
     @GetMapping({"/get", "/modify"})
-    public void get(@RequestParam("bno") Long bno, Model model){
+    public void get(@RequestParam("bno") Long bno, @ModelAttribute("cri") Criteria cri, Model model){
         log.info("...get or modify...");
         model.addAttribute("board", service.get(bno));
     }
 
     @PostMapping("/modify")
-    public String modify(BoardVO bVO, RedirectAttributes rttr){
+    public String modify(BoardVO bVO, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr){
         log.info("...modify...");
         log.info(bVO);
 
@@ -76,11 +78,16 @@ public class BoardController {
         }else {
             log.info("업데이트 실패");
         }
+        rttr.addAttribute("pageNum", cri.getPageNum());
+        rttr.addAttribute("amount", cri.getAmount());
+        rttr.addAttribute("type", cri.getType());
+        rttr.addAttribute("keyword", cri.getKeyword());
+
         return "redirect:/board/list";
     }
 
     @GetMapping("/remove")
-    public String remove(@RequestParam("bno") Long bno, RedirectAttributes rttr){
+    public String remove(@RequestParam("bno") Long bno, @ModelAttribute("cri") Criteria cri, RedirectAttributes rttr){
         log.info("...remove...");
         if (service.remove(bno)){
             log.info("삭제 성공!");
@@ -88,6 +95,11 @@ public class BoardController {
         }else {
             log.info("삭제 실패");
         }
+        rttr.addAttribute("pageNum", cri.getPageNum());
+        rttr.addAttribute("amount", cri.getAmount());
+        rttr.addAttribute("type", cri.getType());
+        rttr.addAttribute("keyword", cri.getKeyword());
+
         return "redirect:/board/list";
     }
 }
