@@ -3,6 +3,7 @@ package com.keduit.domain;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
+import org.springframework.web.util.UriComponentsBuilder;
 
 @Getter
 @Setter
@@ -26,7 +27,18 @@ public class Criteria {
         this.amount = amount;
     }
 
+//    BoardMapper.xml 의 collection 과 이름이 일치해야함
     public String[] getTypeArr(){
         return type == null ? new String[] {} : type.split("");
+    }
+
+    public String getListLink(){
+        UriComponentsBuilder builder = UriComponentsBuilder.fromPath("")
+                .queryParam("pageNum", this.pageNum)
+                .queryParam("amount", this.amount)
+                .queryParam("type", this.type)
+                .queryParam("keyword", this.keyword);
+
+        return builder.toUriString();
     }
 }

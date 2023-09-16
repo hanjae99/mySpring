@@ -13,7 +13,7 @@
 <!--    공통 sql 쿼리 조각-->
     <sql id="criteria">
         <trim prefix="(" suffix=") and" prefixOverrides="OR">
-            <foreach collection="TypeArr" item="type">
+            <foreach collection="typeArr" item="type">
                 <trim prefix="OR">
                     <choose>
                         <when test="type == 'T'.toString()">
