@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.keduit.mapper.ReplyMapper">
+    <insert id="insertSelectKey">
+        <selectKey keyProperty="rno" resultType="long" order="BEFORE">
+            SELECT seq_reply.nextval FROM dual
+        </selectKey>
+        INSERT INTO REPLY (RNO, BNO, REPLY, REPLYER)
+        VALUES (#{rno}, #{bno}, #{reply}, #{replyer})
+    </insert>
+
+    <select id="read" resultType="com.keduit.domain.ReplyVO">
+        SELECT * FROM REPLY WHERE rno = #{rno}
+    </select>
+
+    <select id="getListWithPaging" resultType="com.keduit.domain.ReplyVO">
+    <![CDATA[
+        SELECT rno, bno, reply, replyer, replydate, updatedate
+        FROM (SELECT /*+ INDEX_ASC(reply pk_reply) */
+                  rownum rn,
+                  rno,
+                  bno,
+                  reply,
+                  replyer,
+                  replydate,
+                  updatedate
+              FROM reply
+              WHERE bno = #{bno} AND
+                  rownum <= #{cri.pageNum} * #{cri.amount})
+        WHERE rn > (#{cri.pageNum} - 1) * #{cri.amount}
+        ]]>
+    </select>
+
+    <update id="modify">
+        UPDATE REPLY
+        SET
+            reply = #{reply},
+            updatedate = sysdate
+        WHERE rno = #{rno}
+    </update>
+
+    <delete id="remove">
+        DELETE FROM REPLY
+        WHERE rno = #{rno}
+    </delete>
+
+
+</mapper>
