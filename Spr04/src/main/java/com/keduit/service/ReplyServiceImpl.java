@@ -2,11 +2,14 @@ package com.keduit.service;
 
 import com.keduit.domain.BoardVO;
 import com.keduit.domain.Criteria;
+import com.keduit.domain.ReplyPageDTO;
 import com.keduit.domain.ReplyVO;
+import com.keduit.mapper.BoardMapper;
 import com.keduit.mapper.ReplyMapper;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,11 +20,13 @@ public class ReplyServiceImpl implements ReplyService{
 
     private final ReplyMapper mapper;
 
+    @Transactional
     @Override
     public Long register(ReplyVO rVO) {
         log.info("...impl register...");
-        mapper.insertSelectKey(rVO);
-        return rVO.getRno();
+        long result = mapper.insertSelectKey(rVO);
+//        return rVO.getRno();
+        return result;
     }
 
     @Override
@@ -48,4 +53,15 @@ public class ReplyServiceImpl implements ReplyService{
         log.info("...impl getListWithPaging");
         return mapper.getListWithPaging(cri, bno);
     }
+
+    @Override
+    public ReplyPageDTO getListPage(Criteria cri, Long bno) {
+        log.info("...getListPage...");
+        return new ReplyPageDTO(
+                mapper.getCountByBno(bno),
+                mapper.getListWithPaging(cri, bno)
+        );
+    }
+
+
 }

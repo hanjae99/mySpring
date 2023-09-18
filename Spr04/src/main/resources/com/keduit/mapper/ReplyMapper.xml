@@ -33,6 +33,11 @@
         ]]>
     </select>
 
+    <select id="getCountByBno" resultType="int">
+        SELECT count(rno) FROM reply
+        WHERE bno = #{bno}
+    </select>
+
     <update id="modify">
         UPDATE REPLY
         SET

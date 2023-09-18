@@ -45,8 +45,10 @@
                             <textarea class="form-control" name="content" rows="5" readonly>${board.content}</textarea>
                         </div>
                         <button data-oper="modify" class="btn btn-default">수정</button>
-                        <button data-oper="remove"  class="btn btn-danger" onclick="location.href='/board/remove?bno=${board.bno}'">삭제</button>
-                        <button data-oper="list"  class="btn btn-info">목록</button>
+                        <button data-oper="remove" class="btn btn-danger"
+                                onclick="location.href='/board/remove?bno=${board.bno}'">삭제
+                        </button>
+                        <button data-oper="list" class="btn btn-info">목록</button>
                     </div>
                     <!-- /.col-lg-6 (nested) -->
                     <form id="operForm" action="/board/modify" method="get">
@@ -66,19 +68,67 @@
     <!-- /.col-lg-12 -->
 </div>
 <!-- /.row -->
+<script type="text/javascript" src="/resources/js/reply.js"></script>
 <script type="text/javascript">
-    $(document).ready(function (){
+    $(document).ready(function () {
+
+        console.log("----------");
+        console.log("---JS TEST---");
+
+        const bnoValue = "<c:out value='${board.bno}'/>";
+
+        // replyService.add(
+        //     {reply: "JS TEST", replyer: "tester", bno: bnoValue},
+        //     function (result){
+        //         alert("RESULT: " + result);
+        //     }
+        // );
+
+        replyService.get(203,
+            function (data) {
+                console.log("...get data: ", data);
+            }
+        );
+
+        // replyService.getList({bno: bnoValue, page: 1},
+        //     function (list) {
+        //         for (let i = 0, len = list.length || 0; i < len; i++) {
+        //             console.log(list[i]);
+        //         }
+        //     }
+        // );
+
+        // replyService.remove(204,
+        //     function (result) {
+        //         console.log("...remove count: " + result);
+        //
+        //         if (result === "success") {
+        //             alert("removed successfully!");
+        //         }
+        //     }, function (err) {
+        //         alert("ERROR!");
+        //     });
+
+        // replyService.modify({
+        //     rno: 201,
+        //     reply: "jsModify"
+        // }, function (result) {
+        //     alert("수정완료 " + result);
+        // });
+
+        console.log(replyService);
+
         const operForm = $("#operForm");
 
-        $("button[data-oper='modify']").on("click", function (e){
+        $("button[data-oper='modify']").on("click", function (e) {
             operForm.submit();
         });
 
-        $("button[data-oper='remove']").on("click", function (e){
+        $("button[data-oper='remove']").on("click", function (e) {
             operForm.attr("action", "/board/remove").submit();
         })
 
-        $("button[data-oper='list']").on("click", function (e){
+        $("button[data-oper='list']").on("click", function (e) {
             operForm.find("#bno").remove();
             operForm.attr("action", "/board/list").submit();
         })

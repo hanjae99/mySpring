@@ -38,7 +38,7 @@ public class ReplyMapperTests {
     @Test
     public void testRead(){
         log.info("...read...");
-        mapper.read(5L);
+        mapper.read(6L);
     }
 
     @Test
@@ -46,8 +46,6 @@ public class ReplyMapperTests {
         log.info("...ListWithPaging...");
 
         Criteria cri = new Criteria();
-        cri.setPageNum(1);
-        cri.setAmount(10);
 
         List<ReplyVO> replies = mapper.getListWithPaging(cri, 35L);
     }

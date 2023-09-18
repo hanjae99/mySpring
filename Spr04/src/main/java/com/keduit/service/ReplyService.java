@@ -2,6 +2,7 @@ package com.keduit.service;
 
 import com.keduit.domain.BoardVO;
 import com.keduit.domain.Criteria;
+import com.keduit.domain.ReplyPageDTO;
 import com.keduit.domain.ReplyVO;
 import org.apache.ibatis.annotations.Param;
 
@@ -18,4 +19,6 @@ public interface ReplyService {
     public boolean remove(Long rno);
 
     public List<ReplyVO> getList(@Param("cri") Criteria cri, @Param("bno") Long bno);
+
+    public ReplyPageDTO getListPage(Criteria cri, Long bno);
 }
