@@ -45,7 +45,7 @@ const replyService = (function () {
 
         $.getJSON("/reply/pages/" + bno + "/" + page + ".json", function (data) {
             if (callback) {
-                callback(data);
+                callback(data.replyCnt, data.list);
             }
         }).fail(function (xhr, status, err) {
             if (error) {
@@ -92,11 +92,45 @@ const replyService = (function () {
         })
     }
 
+    function displayTime(timeValue) {
+        const today = new Date();
+        const gap = today.getTime() - timeValue;
+
+        const dateObj = new Date(timeValue);
+        let str = "";
+
+        if (gap < (1000 * 60 * 60 * 24)) {
+
+            const hh = dateObj.getHours().toString().padStart(2, "0");
+            const mm = dateObj.getMinutes().toString().padStart(2, "0");
+            const ss = dateObj.getSeconds().toString().padStart(2, "0");
+
+            // 날짜 형식 (오늘 작성된 게시글이면 시간만, 아니면 날짜만)
+            // 한자리수일경우 앞에 0 처리
+            // return [(hh > 9 ? "" : "0") + hh,
+            //     ":", (mm > 9 ? "" : "0") + mm,
+            //     ":", (ss > 9 ? "" : "0") + ss].join("");
+            return hh + ":" + mm + ":" + ss;
+
+        } else {
+            const yy = dateObj.getFullYear();
+            let MM = dateObj.getMonth() + 1;
+            MM = MM.toString().padStart(2, "0");
+            const dd = dateObj.getDate().toString().padStart(2, "0");
+
+            // return [yy,
+            //     "/", (MM > 9 ? "" : "0") + MM,
+            //     "/", (dd > 9 ? "" : "0") + dd].join("");
+            return [yy, MM, dd].join("/");
+        }
+    }
+
     return {
         add: add,
         get: get,
         getList: getList,
         remove: remove,
-        modify: modify
+        modify: modify,
+        displayTime: displayTime
     };
 })();

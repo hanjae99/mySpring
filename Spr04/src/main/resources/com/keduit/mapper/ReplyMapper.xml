@@ -18,7 +18,7 @@
     <select id="getListWithPaging" resultType="com.keduit.domain.ReplyVO">
     <![CDATA[
         SELECT rno, bno, reply, replyer, replydate, updatedate
-        FROM (SELECT /*+ INDEX_ASC(reply pk_reply) */
+        FROM (SELECT /*+ INDEX(reply idx_reply)*/
                   rownum rn,
                   rno,
                   bno,
