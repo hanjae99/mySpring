@@ -57,7 +57,8 @@
                     <c:forEach items="${list}" var="board">
                         <tr>
                             <td><c:out value="${board.bno}"/></td>
-                            <td><a class="move" href="${board.bno}"><c:out value="${board.title}"/></a></td>
+                            <td><a class="move" href="${board.bno}"><c:out value="${board.title}"/>
+                                <i class="fa fa-comments fa-fw"/><b>${board.replyCnt}</b></a></td>
                             <td><c:out value="${board.writer}"/></td>
                             <td><fmt:formatDate value="${board.regdate}" pattern="yyyy-MM-dd hh:mm:ss"/></td>
                             <td><fmt:formatDate value="${board.updatedate}" pattern="yyyy-MM-dd hh:mm:ss"/></td>

@@ -199,7 +199,7 @@
             }
 
             for (let i=startNum; i<=endNum; i++){
-                const active = pageNum === i ? "active" : "";
+                const active = parseInt(pageNum) === i ? "active" : "";
                 str += "<li class='page-item " + active + "'><a class='page-link' href='" + i + "'>"
                         + i + "</a></li>";
             }
@@ -213,6 +213,15 @@
 
             replyPageFooter.html(str);
         }
+
+        // 이벤트 위임 (부모 -> 자식)
+        replyPageFooter.on("click", "li a", function (e){
+            e.preventDefault();
+
+            const targetPage = $(this).attr("href");
+            pageNum = targetPage;
+            showList(pageNum);
+        })
 
         // 댓글 모달 처리
         const modal = $("#myModal");

@@ -19,12 +19,14 @@ import java.util.List;
 public class ReplyServiceImpl implements ReplyService{
 
     private final ReplyMapper mapper;
+    private final BoardMapper boardMapper;
 
     @Transactional
     @Override
     public Long register(ReplyVO rVO) {
         log.info("...impl register...");
         long result = mapper.insertSelectKey(rVO);
+        boardMapper.updateReplyCnt(rVO.getBno(), 1);
 //        return rVO.getRno();
         return result;
     }
@@ -42,9 +44,14 @@ public class ReplyServiceImpl implements ReplyService{
         return mapper.modify(rVO);
     }
 
+    @Transactional
     @Override
     public boolean remove(Long rno) {
         log.info("...impl remove...");
+
+        ReplyVO rVO = mapper.read(rno);
+        boardMapper.updateReplyCnt(rVO.getBno(), -1);
+
         return mapper.remove(rno);
     }
 

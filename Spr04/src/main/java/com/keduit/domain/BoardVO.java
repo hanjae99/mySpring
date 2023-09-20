@@ -18,4 +18,5 @@ public class BoardVO {
 
 //    @DateTimeFormat(pattern = "yyyy-MM-dd hh:mm:ss")
     private Date updatedate;
+    private int replyCnt;
 }
